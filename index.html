@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRated - AI Website Intelligence Platform</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .app {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Background Effects */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .bg-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #3b82f6, transparent);
+            top: 20%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-orb-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #8b5cf6, transparent);
+            bottom: 30%;
+            left: 10%;
+            animation-delay: 2s;
+        }
+
+        .bg-orb-3 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #ec4899, transparent);
+            bottom: 10%;
+            right: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 32px;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 16px;
+        }
+
+        .nav-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .user-tier {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 32px;
+            padding-right: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 60px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0ff 50%, #ffa0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Glass Panel */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            padding: 48px;
+            margin-bottom: 48px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 32px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            padding: 20px 32px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .stat-card {
+            padding: 32px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 20px;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Analysis Result */
+        .analysis-result {
+            margin-top: 32px;
+            padding: 32px;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 32px;
+        }
+
+        .result-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .result-info .domain {
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .result-info .industry {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .overall-score {
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .score-grade {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .score-excellent { color: #10b981; }
+        .score-good { color: #34d399; }
+        .score-fair { color: #fbbf24; }
+        .score-poor { color: #f59e0b; }
+        .score-critical { color: #f87171; }
+
+        .grade-excellent { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .grade-good { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+        .grade-fair { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .grade-poor { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .grade-critical { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+        /* Score Breakdown */
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+        }
+
+        .score-item-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .score-item-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: capitalize;
+        }
+
+        /* AI Summary */
+        .ai-summary {
+            display: grid;
+            gap: 16px;
+        }
+
+        .summary-item {
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid;
+        }
+
+        .summary-working {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .summary-improvements {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .summary-invitation {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .summary-title.working { color: #10b981; }
+        .summary-title.improvements { color: #f59e0b; }
+        .summary-title.invitation { color: #3b82f6; }
+
+        .summary-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+        }
+
+        .contact-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .contact-details {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .main-content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            
+            .analysis-section {
+                padding: 32px 24px;
+            }
+
+            .nav-tabs {
+                display: none;
+            }
+
+            .result-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Mock API client
+        const apiClient = {
+            async analyzeWebsite(url, priority = 'normal') {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                return {
+                    url,
+                    domain: new URL(url.startsWith('http') ? url : `https://${url}`).hostname,
+                    title: `Analysis for ${url}`,
+                    score: Math.floor(Math.random() * 40) + 60,
+                    scores: {
+                        ux_design: Math.floor(Math.random() * 30) + 70,
+                        seo_fundamentals: Math.floor(Math.random() * 25) + 65,
+                        speed_optimization: Math.floor(Math.random() * 35) + 60,
+                        visual_identity: Math.floor(Math.random() * 25) + 75,
+                        strategic_copy: Math.floor(Math.random() * 30) + 68
+                    },
+                    industry: ['Technology', 'E-commerce', 'Local Business', 'Professional Services'][Math.floor(Math.random() * 4)],
+                    contact_info: {
+                        email: `contact@${new URL(url.startsWith('http') ? url : `https://${url}`).hostname}`,
+                        company_name: `${new URL(url.startsWith('http') ? url : `https://${url}`).hostname.split('.')[0]} Inc.`
+                    },
+                    analysis_summary: {
+                        working: "Strong visual design and clear navigation structure with good brand consistency throughout the site.",
+                        improvements: "Page loading speeds could be optimized, and mobile responsiveness needs enhancement for better user experience.",
+                        invitation: "We'd love to share specific recommendations to help boost your online presence and conversion rates!"
+                    },
+                    timestamp: new Date().toISOString()
+                };
+            },
+
+            async getDashboardAnalytics() {
+                return {
+                    summary: {
+                        total_analyses: 1247,
+                        avg_score: 73.2,
+                        with_contact: 892
+                    },
+                    outreach_stats: {
+                        emails_sent: 234
+                    }
+                };
+            }
+        };
+
+        const CodeRatedApp = () => {
+            const [currentView, setCurrentView] = useState('home');
+            const [user, setUser] = useState(null);
+            const [isAnalyzing, setIsAnalyzing] = useState(false);
+            const [analysisResult, setAnalysisResult] = useState(null);
+            const [searchUrl, setSearchUrl] = useState('');
+            const [analytics, setAnalytics] = useState(null);
+
+            useEffect(() => {
+                setUser({
+                    name: 'Alex Chen',
+                    email: 'alex@company.com',
+                    tier: 'business',
+                    avatar: '👨‍💼'
+                });
+
+                loadAnalytics();
+            }, []);
+
+            const loadAnalytics = async () => {
+                try {
+                    const data = await apiClient.getDashboardAnalytics();
+                    setAnalytics(data);
+                } catch (error) {
+                    console.error('Failed to load analytics:', error);
+                }
+            };
+
+            const handleAnalyze = async () => {
+                if (!searchUrl.trim()) return;
+                
+                setIsAnalyzing(true);
+                setAnalysisResult(null);
+                
+                try {
+                    const result = await apiClient.analyzeWebsite(searchUrl);
+                    setAnalysisResult(result);
+                } catch (error) {
+                    console.error('Analysis failed:', error);
+                } finally {
+                    setIsAnalyzing(false);
+                }
+            };
+
+            const getScoreColor = (score) => {
+                if (score >= 90) return 'score-excellent';
+                if (score >= 80) return 'score-good';
+                if (score >= 70) return 'score-fair';
+                if (score >= 60) return 'score-poor';
+                return 'score-critical';
+            };
+
+            const getScoreGrade = (score) => {
+                if (score >= 90) return { text: 'Excellent', class: 'grade-excellent' };
+                if (score >= 80) return { text: 'Good', class: 'grade-good' };
+                if (score >= 70) return { text: 'Fair', class: 'grade-fair' };
+                if (score >= 60) return { text: 'Poor', class: 'grade-poor' };
+                return { text: 'Critical', class: 'grade-critical' };
+            };
+
+            return (
+                <div className="app">
+                    {/* Background Effects */}
+                    <div className="bg-effects">
+                        <div className="bg-orb bg-orb-1"></div>
+                        <div className="bg-orb bg-orb-2"></div>
+                        <div className="bg-orb bg-orb-3"></div>
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="navbar">
+                        <div className="nav-content">
+                            <div className="logo-container" onClick={() => setCurrentView('home')}>
+                                <div className="logo">R</div>
+                                <span className="brand-name">CodeRated</span>
+                            </div>
+                            
+                            <div className="nav-tabs">
+                                <div 
+                                    className={`nav-tab ${currentView === 'home' ? 'active' : ''}`}
+                                    onClick={() => setCurrentView('home')}
+                                >
+                                    🔍 Analyze
+                                </div>
+                                <div 
+                                    className={`nav-tab ${currentView === 'dashboard' ? 'active' : ''}`}
+                                    onClick={() => setCurrentView('dashboard')}
+                                >
+                                    📊 Dashboard
+                                </div>
+                                <div 
+                                    className={`nav-tab ${currentView === 'analyses' ? 'active' : ''}`}
+                                    onClick={() => setCurrentView('analyses')}
+                                >
+                                    🌐 Analyses
+                                </div>
+                            </div>
+
+                            {user && (
+                                <div className="user-info">
+                                    <span className="user-tier">{user.tier}</span>
+                                    <span>{user.avatar} {user.name}</span>
+                                </div>
+                            )}
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <div className="main-content">
+                        {/* Hero Section */}
+                        <div className="hero-section">
+                            <h1 className="hero-title">AI Website Intelligence</h1>
+                            <p className="hero-subtitle">Discover, analyze, and improve websites with advanced AI-powered insights</p>
+                            <p className="hero-description">Get comprehensive scores for UX design, SEO, speed optimization, visual identity, and strategic copy</p>
+                        </div>
+
+                        {/* Analysis Section */}
+                        <div className="glass-panel analysis-section">
+                            <div className="search-container">
+                                <input
+                                    type="text"
+                                    value={searchUrl}
+                                    onChange={(e) => setSearchUrl(e.target.value)}
+                                    placeholder="Enter website URL (e.g., example.com)"
+                                    className="search-input"
+                                    onKeyPress={(e) => e.key === 'Enter' && handleAnalyze()}
+                                />
+                                <button
+                                    onClick={handleAnalyze}
+                                    disabled={isAnalyzing || !searchUrl.trim()}
+                                    className="btn btn-primary"
+                                >
+                                    {isAnalyzing ? (
+                                        <>
+                                            <div className="loading-spinner" style={{width: '20px', height: '20px', margin: '0'}}></div>
+                                            Analyzing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            🔍 Analyze Website
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+
+                            {/* Analysis Result */}
+                            {analysisResult && (
+                                <div className="analysis-result">
+                                    <div className="result-header">
+                                        <div className="result-info">
+                                            <h3>{analysisResult.contact_info.company_name}</h3>
+                                            <div className="domain">
+                                                🔗 <a href={analysisResult.url} target="_blank" rel="noopener noreferrer">{analysisResult.domain}</a>
+                                            </div>
+                                            <div className="industry">{analysisResult.industry}</div>
+                                        </div>
+                                        <div className="overall-score">
+                                            <div className={`score-number ${getScoreColor(analysisResult.score)}`}>
+                                                {analysisResult.score}
+                                            </div>
+                                            <div className="score-label">Overall Score</div>
+                                            <div className={`score-grade ${getScoreGrade(analysisResult.score).class}`}>
+                                                {getScoreGrade(analysisResult.score).text}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Score Breakdown */}
+                                    <div className="score-breakdown">
+                                        {Object.entries(analysisResult.scores).map(([key, value]) => (
+                                            <div key={key} className="score-item">
+                                                <div className={`score-item-number ${getScoreColor(value)}`}>{value}</div>
+                                                <div className="score-item-label">
+                                                    {key.replace('_', ' ')}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* AI Summary */}
+                                    <div className="ai-summary">
+                                        <div className="summary-item summary-working">
+                                            <div className="summary-title working">
+                                                ✅ What's Working Well
+                                            </div>
+                                            <div className="summary-text">{analysisResult.analysis_summary.working}</div>
+                                        </div>
+                                        
+                                        <div className="summary-item summary-improvements">
+                                            <div className="summary-title improvements">
+                                                🚀 Improvement Opportunities
+                                            </div>
+                                            <div className="summary-text">{analysisResult.analysis_summary.improvements}</div>
+                                        </div>
+                                        
+                                        <div className="summary-item summary-invitation">
+                                            <div className="summary-title invitation">
+                                                ⭐ Our Recommendation
+                                            </div>
+                                            <div className="summary-text">{analysisResult.analysis_summary.invitation}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Contact Info */}
+                                    {analysisResult.contact_info.email && (
+                                        <div className="contact-info">
+                                            <div className="contact-title">Contact Information</div>
+                                            <div className="contact-details">
+                                                📧 {analysisResult.contact_info.email}<br/>
+                                                🏢 {analysisResult.contact_info.company_name}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Stats Grid */}
+                        {analytics && (
+                            <div className="stats-grid">
+                                <div className="glass-panel stat-card">
+                                    <div className="stat-icon" style={{background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)'}}>
+                                        🌐
+                                    </div>
+                                    <div className="stat-number">{analytics.summary.total_analyses.toLocaleString()}</div>
+                                    <div className="stat-label">Websites Analyzed</div>
+                                </div>
+                                
+                                <div className="glass-panel stat-card">
+                                    <div className="stat-icon" style={{background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)'}}>
+                                        ⭐
+                                    </div>
+                                    <div className="stat-number">{analytics.summary.avg_score.toFixed(1)}/100</div>
+                                    <div className="stat-label">Average Score</div>
+                                </div>
+                                
+                                <div className="glass-panel stat-card">
+                                    <div className="stat-icon" style={{background: 'linear-gradient(135deg, #10b981, #059669)'}}>
+                                        📧
+                                    </div>
+                                    <div className="stat-number">{analytics.summary.with_contact.toLocaleString()}</div>
+                                    <div className="stat-label">Contact Info Found</div>
+                                </div>
+                                
+                                <div className="glass-panel stat-card">
+                                    <div className="stat-icon" style={{background: 'linear-gradient(135deg, #f59e0b, #d97706)'}}>
+                                        📈
+                                    </div>
+                                    <div className="stat-number">{analytics.outreach_stats.emails_sent.toLocaleString()}</div>
+                                    <div className="stat-label">Outreach Emails Sent</div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<CodeRatedApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>
