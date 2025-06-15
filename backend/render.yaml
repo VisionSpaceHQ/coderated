@@ -1,0 +1,89 @@
+# render.yaml - Render deployment configuration
+services:
+  # Frontend (React/Vite)
+  - type: web
+    name: coderated-frontend
+    env: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://coderated-backend.onrender.com/api
+      - key: VITE_ENVIRONMENT
+        value: production
+      - key: VITE_LOCAL_AI_URL
+        value: http://localhost:8000/api  # For local AI fallback
+    domains:
+      - coderated.com  # Your custom domain (optional)
+
+  # Backend API (Flask/Python)
+  - type: web
+    name: coderated-backend
+    env: python
+    plan: starter  # or standard/pro based on your needs
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT coderated_api_server:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DEBUG
+        value: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: coderated-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: coderated-redis
+          type: redis
+          property: connectionString
+      - key: OPENAI_API_KEY
+        sync: false  # Set this manually in Render dashboard
+      - key: ANTHROPIC_API_KEY
+        sync: false  # Set this manually in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "https://coderated-frontend.onrender.com,https://coderated.com"
+
+  # Redis (for caching and queue management)
+  - type: redis
+    name: coderated-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+
+# Database (PostgreSQL)
+databases:
+  - name: coderated-db
+    databaseName: coderated
+    user: coderated_user
+    plan: starter
+
+# Environment-specific files
+---
+# render-staging.yaml (for staging environment)
+services:
+  - type: web
+    name: coderated-frontend-staging
+    env: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://coderated-backend-staging.onrender.com/api
+      - key: VITE_ENVIRONMENT
+        value: staging
+    branch: develop  # Deploy from develop branch
+
+  - type: web
+    name: coderated-backend-staging
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT coderated_api_server:app
+    branch: develop
+    envVars:
+      - key: FLASK_ENV
+        value: staging
+      - key: DEBUG
+        value: true
